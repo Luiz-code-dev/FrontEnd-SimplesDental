@@ -1,4 +1,4 @@
-import { Directive, ElementRef, Input, OnInit, OnDestroy, AfterViewInit } from '@angular/core';
+import { Directive, Input, OnInit, OnDestroy, TemplateRef, ViewContainerRef } from '@angular/core';
 import { PermissionService } from '../services/permission.service';
 import { UserRole } from '../models/user.model';
 import { Subject, takeUntil } from 'rxjs';
@@ -7,65 +7,40 @@ import { Subject, takeUntil } from 'rxjs';
   selector: '[appPermission]',
   standalone: true
 })
-export class PermissionDirective implements OnInit, OnDestroy, AfterViewInit {
+export class PermissionDirective implements OnInit, OnDestroy {
   @Input() appPermission: string = '';
   private destroy$ = new Subject<void>();
-  private elementReady = false;
-  private pendingPermission: boolean | null = null;
 
   constructor(
-    private el: ElementRef,
+    private templateRef: TemplateRef<any>,
+    private viewContainer: ViewContainerRef,
     private permissionService: PermissionService
   ) {}
 
-  private setElementVisibility(visible: boolean) {
-    if (this.elementReady && this.el?.nativeElement) {
-      try {
-        this.el.nativeElement.style.display = visible ? '' : 'none';
-      } catch (error) {
-        // Ignora erros silenciosamente
-      }
-    } else {
-      this.pendingPermission = visible;
-    }
-  }
-
   ngOnInit() {
     if (!this.appPermission) {
+      this.viewContainer.clear();
       return;
     }
 
-    let permissionCheck;
-
-    switch (this.appPermission.toLowerCase()) {
-      case 'admin':
-      case 'create':
-      case 'edit':
-      case 'delete':
-        permissionCheck = this.permissionService.isAdmin();
-        break;
-      case 'user':
-      default:
-        permissionCheck = this.permissionService.hasPermission(UserRole.USER);
-    }
+    const isAdminAction = ['admin', 'create', 'edit', 'delete'].includes(this.appPermission.toLowerCase());
+    const permissionCheck = isAdminAction ? 
+      this.permissionService.isAdmin() : 
+      this.permissionService.hasPermission(UserRole.USER);
 
     permissionCheck
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (hasPermission) => {
-          this.setElementVisibility(hasPermission);
+          this.viewContainer.clear();
+          if (hasPermission) {
+            this.viewContainer.createEmbeddedView(this.templateRef);
+          }
         },
         error: () => {
-          this.setElementVisibility(false);
+          this.viewContainer.clear();
         }
       });
-  }
-
-  ngAfterViewInit() {
-    this.elementReady = true;
-    if (this.pendingPermission !== null) {
-      this.setElementVisibility(this.pendingPermission);
-    }
   }
 
   ngOnDestroy() {

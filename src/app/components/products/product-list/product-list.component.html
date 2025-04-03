@@ -4,8 +4,8 @@
       <mat-card-title>Produtos</mat-card-title>
     </mat-card-header>
     <mat-card-content>
-      <div class="button-container">
-        <a *appPermission="'create'" mat-raised-button color="primary" [routerLink]="['/products/new']">
+      <div class="button-container" *appPermission="'admin'">
+        <a mat-raised-button color="primary" [routerLink]="['/products/new']">
           <mat-icon>add</mat-icon> Novo Produto
         </a>
       </div>
