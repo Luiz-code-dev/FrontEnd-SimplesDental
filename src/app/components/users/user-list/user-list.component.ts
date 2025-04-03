@@ -64,13 +64,11 @@ export class UserListComponent implements OnInit {
       sort: `${this.sortField},${this.sortDirection}`
     }).subscribe({
       next: (response) => {
-        console.log('Users received:', response.content);
         this.users = response.content;
         this.totalElements = response.totalElements;
         this.loading = false;
       },
       error: (error) => {
-        console.error('Error loading users:', error);
         this.snackBar.open('Erro ao carregar usuários', 'Fechar', { duration: 3000 });
         this.loading = false;
       }

@@ -50,13 +50,11 @@ export class CategoryService {
 
   private validateCategory(category: CreateCategoryDto | UpdateCategoryDto): boolean {
     if (!category.name || category.name.length > 100) {
-      console.error('Nome da categoria inválido');
-      return false;
+      throw new Error('Nome da categoria inválido');
     }
 
-    if (category.description && category.description.length > 255) {
-      console.error('Descrição da categoria inválida');
-      return false;
+    if (!category.description || category.description.length > 255) {
+      throw new Error('Descrição da categoria inválida');
     }
 
     return true;

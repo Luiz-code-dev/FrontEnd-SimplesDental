@@ -72,7 +72,6 @@ export class CategoryFormComponent implements OnInit {
         this.loading = false;
       },
       error: (error) => {
-        console.error('Erro ao carregar categoria:', error);
         this.snackBar.open('Erro ao carregar categoria', 'Fechar', { duration: 3000 });
         this.loading = false;
         this.router.navigate(['/categories']);
@@ -101,7 +100,6 @@ export class CategoryFormComponent implements OnInit {
           this.router.navigate(['/categories']);
         },
         error: (error) => {
-          console.error('Erro ao atualizar categoria:', error);
           this.snackBar.open('Erro ao atualizar categoria', 'Fechar', { duration: 3000 });
           this.loading = false;
         }
@@ -114,7 +112,6 @@ export class CategoryFormComponent implements OnInit {
           this.router.navigate(['/categories']);
         },
         error: (error) => {
-          console.error('Erro ao criar categoria:', error);
           this.snackBar.open('Erro ao criar categoria', 'Fechar', { duration: 3000 });
           this.loading = false;
         }

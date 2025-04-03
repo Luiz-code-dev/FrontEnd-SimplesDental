@@ -75,7 +75,6 @@ export class CategoryListComponent implements OnInit {
         this.loading = false;
       },
       error: (error) => {
-        console.error('Erro ao carregar categorias:', error);
         this.snackBar.open('Erro ao carregar categorias', 'Fechar', { duration: 3000 });
         this.loading = false;
       }
@@ -103,7 +102,6 @@ export class CategoryListComponent implements OnInit {
             this.loadCategories();
           },
           error: (error) => {
-            console.error('Erro ao excluir categoria:', error);
             this.snackBar.open('Erro ao excluir categoria', 'Fechar', { duration: 3000 });
           }
         });

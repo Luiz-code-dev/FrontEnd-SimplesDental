@@ -77,7 +77,6 @@ export class ProductListComponent implements OnInit {
         this.loading = false;
       },
       error: (error) => {
-        console.error('Error loading products:', error);
         this.snackBar.open('Erro ao carregar produtos', 'Fechar', {
           duration: 3000,
           horizontalPosition: 'end',
@@ -113,7 +112,6 @@ export class ProductListComponent implements OnInit {
           });
         },
         error: (error) => {
-          console.error('Error deleting product:', error);
           this.snackBar.open('Erro ao excluir produto', 'Fechar', {
             duration: 3000,
             horizontalPosition: 'end',

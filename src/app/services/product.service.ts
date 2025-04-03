@@ -50,23 +50,19 @@ export class ProductService {
 
   private validateProduct(product: CreateProductDto | UpdateProductDto): boolean {
     if (!product.name || product.name.length > 100) {
-      console.error('Nome do produto inválido');
-      return false;
+      throw new Error('Nome do produto inválido');
     }
 
     if (!product.description || product.description.length > 255) {
-      console.error('Descrição do produto inválida');
-      return false;
+      throw new Error('Descrição do produto inválida');
     }
 
     if (!product.price || product.price <= 0) {
-      console.error('Preço do produto inválido');
-      return false;
+      throw new Error('Preço do produto inválido');
     }
 
     if (!product.category || !product.category.id) {
-      console.error('Categoria do produto inválida');
-      return false;
+      throw new Error('Categoria do produto inválida');
     }
 
     return true;

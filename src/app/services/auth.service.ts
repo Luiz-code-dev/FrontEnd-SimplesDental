@@ -23,51 +23,33 @@ export class AuthService {
   }
 
   login(credentials: { email: string; password: string }): Observable<any> {
-    console.log('Iniciando login para:', credentials.email);
     const loginUrl = `${environment.apiBaseUrl}${environment.auth.baseEndpoint}${environment.auth.loginEndpoint}`;
-    console.log('URL de login:', loginUrl);
 
     return this.http.post<any>(loginUrl, credentials)
       .pipe(
         tap(response => {
-          console.log('Resposta completa do login:', response);
-          
           if (response && response.token) {
-            console.log('Token recebido:', response.token);
-            
-            // Validar formato do token
             const tokenParts = response.token.split('.');
-            console.log('Número de partes do token:', tokenParts.length);
-            
             if (tokenParts.length !== 3) {
-              console.error('Token JWT inválido: deve ter 3 partes separadas por ponto. Encontrado:', tokenParts.length);
-              throw new Error('Token JWT malformado');
+              throw new Error('Token JWT inválido: deve ter 3 partes separadas por ponto');
             }
 
             try {
-              // Decodificar cada parte do token
-              console.log('Header:', JSON.parse(atob(tokenParts[0])));
               const payload = JSON.parse(atob(tokenParts[1]));
-              console.log('Payload:', payload);
-              
               if (!payload.sub) {
-                console.error('Token inválido: sub está ausente ou null');
-                throw new Error('Token sem subject (sub)');
+                throw new Error('Token inválido: sub está ausente ou null');
               }
 
               localStorage.setItem('token', response.token);
               this.loadUserContext().subscribe();
             } catch (error) {
-              console.error('Erro ao processar token:', error);
-              throw error;
+              throw new Error('Erro ao processar token');
             }
           } else {
-            console.error('Resposta do login não contém token:', response);
-            throw new Error('Token não encontrado na resposta');
+            throw new Error('Resposta do login não contém token');
           }
         }),
         catchError(error => {
-          console.error('Erro durante o login:', error);
           this.logout();
           return throwError(() => error);
         })
@@ -75,11 +57,9 @@ export class AuthService {
   }
 
   loadUserContext(): Observable<UserContext> {
-    console.log('[AuthService] Fetching user context...');
     const token = this.getToken();
     
     if (!token) {
-      console.error('[AuthService] No token found, cannot fetch user context');
       this.logout();
       return throwError(() => new Error('No token found'));
     }
@@ -94,9 +74,7 @@ export class AuthService {
       { email }
     ).pipe(
       tap(context => {
-        console.log('[AuthService] User context received:', context);
         if (!context || !context.role) {
-          console.error('[AuthService] Invalid user context received:', context);
           this.logout();
           throw new Error('Invalid user context');
         }
@@ -104,14 +82,6 @@ export class AuthService {
         this.isAdminSubject.next(context.role === 'ADMIN');
       }),
       catchError(error => {
-        console.error('[AuthService] Error fetching user context:', error);
-        if (error.status === 400) {
-          console.error('[AuthService] Bad request when fetching user context. Request details:', {
-            url: `${environment.apiBaseUrl}${environment.auth.baseEndpoint}${environment.auth.contextEndpoint}`,
-            headers: error.headers,
-            error: error.error
-          });
-        }
         this.logout();
         return throwError(() => error);
       })
