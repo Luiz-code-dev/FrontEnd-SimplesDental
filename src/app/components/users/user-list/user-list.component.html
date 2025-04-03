@@ -1,0 +1,63 @@
+<div class="user-list-container">
+  <div class="header">
+    <h1>Usuários</h1>
+    <button mat-raised-button color="primary" routerLink="/users/new" *appPermission="'create'">
+      <mat-icon>add</mat-icon>
+      Novo Usuário
+    </button>
+  </div>
+
+  <div class="table-container" *ngIf="!loading; else loadingTemplate">
+    <table mat-table [dataSource]="users" matSort (matSortChange)="onSort($event)" class="mat-elevation-z2">
+      <ng-container matColumnDef="name">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Nome</th>
+        <td mat-cell *matCellDef="let user">{{ user.email }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="email">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Email</th>
+        <td mat-cell *matCellDef="let user">{{ user.email }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="role">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Função</th>
+        <td mat-cell *matCellDef="let user">
+          <mat-chip-set>
+            <mat-chip [color]="user.role === UserRole.ADMIN ? 'accent' : 'primary'" selected>
+              {{ user.role === UserRole.ADMIN ? 'Administrador' : 'Usuário' }}
+            </mat-chip>
+          </mat-chip-set>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef>Ações</th>
+        <td mat-cell *matCellDef="let user">
+          <button mat-icon-button color="primary" [routerLink]="['/users', user.id]" *appPermission="'edit'" matTooltip="Editar">
+            <mat-icon>edit</mat-icon>
+          </button>
+          <button mat-icon-button color="warn" (click)="deleteUser(user)" *appPermission="'delete'" matTooltip="Excluir">
+            <mat-icon>delete</mat-icon>
+          </button>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="['name', 'email', 'role', 'actions']"></tr>
+      <tr mat-row *matRowDef="let row; columns: ['name', 'email', 'role', 'actions'];"></tr>
+    </table>
+
+    <mat-paginator
+      [length]="totalElements"
+      [pageSize]="pageSize"
+      [pageSizeOptions]="[5, 10, 25, 50]"
+      (page)="onPageChange($event)"
+      aria-label="Selecionar página">
+    </mat-paginator>
+  </div>
+
+  <ng-template #loadingTemplate>
+    <div class="loading-spinner">
+      <mat-spinner></mat-spinner>
+    </div>
+  </ng-template>
+</div>

@@ -1,0 +1,47 @@
+.user-list-container {
+  padding: 1rem;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.table-container {
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+}
+
+.mat-column-actions {
+  width: 100px;
+  text-align: right;
+}
+
+.active {
+  color: #4caf50;
+  font-weight: 500;
+}
+
+.inactive {
+  color: #f44336;
+  font-weight: 500;
+}
+
+.loading-spinner {
+  display: flex;
+  justify-content: center;
+  padding: 2rem;
+}
+
+mat-paginator {
+  margin-top: 1rem;
+}
+
+.mat-column-role {
+  width: 120px;
+}

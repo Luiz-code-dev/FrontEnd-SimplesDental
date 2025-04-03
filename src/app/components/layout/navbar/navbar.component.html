@@ -1,0 +1,35 @@
+<mat-toolbar color="primary">
+  <span>Produtos & Categorias</span>
+  <span class="spacer"></span>
+
+  <ng-container *ngIf="isLoggedIn()">
+    <a mat-button routerLink="/products">
+      <mat-icon>inventory_2</mat-icon>
+      <span>Produtos</span>
+    </a>
+    <a mat-button routerLink="/categories">
+      <mat-icon>category</mat-icon>
+      <span>Categorias</span>
+    </a>
+    <a mat-button routerLink="/users" *ngIf="isAdmin">
+      <mat-icon>people</mat-icon>
+      <span>Usuários</span>
+    </a>
+
+    <button mat-button [matMenuTriggerFor]="menu">
+      {{ user?.first_name || 'Usuário' }}
+      <mat-icon>arrow_drop_down</mat-icon>
+    </button>
+
+    <mat-menu #menu="matMenu">
+      <a mat-menu-item routerLink="/profile">
+        <mat-icon>person</mat-icon>
+        <span>Perfil</span>
+      </a>
+      <button mat-menu-item (click)="logout()">
+        <mat-icon>exit_to_app</mat-icon>
+        <span>Sair</span>
+      </button>
+    </mat-menu>
+  </ng-container>
+</mat-toolbar>

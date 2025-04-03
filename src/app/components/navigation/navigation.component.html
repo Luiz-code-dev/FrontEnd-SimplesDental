@@ -1,0 +1,54 @@
+<!-- Toolbar principal -->
+<mat-toolbar color="primary">
+  <a mat-button routerLink="/">
+    <mat-icon>home</mat-icon>
+    <span>Home</span>
+  </a>
+
+  <!-- Menu para usuário logado -->
+  <ng-container *ngIf="isLoggedIn">
+    <a mat-button routerLink="/products">
+      <mat-icon>shopping_cart</mat-icon>
+      <span>Produtos</span>
+    </a>
+
+    <a mat-button routerLink="/categories">
+      <mat-icon>category</mat-icon>
+      <span>Categorias</span>
+    </a>
+
+    <!-- Menu de administrador -->
+    <ng-container *ngIf="isAdmin | async">
+      <a mat-button routerLink="/users">
+        <mat-icon>people</mat-icon>
+        <span>Usuários</span>
+      </a>
+    </ng-container>
+
+    <!-- Menu do usuário -->
+    <div class="spacer"></div>
+    <button mat-button [matMenuTriggerFor]="userMenu">
+      <mat-icon>account_circle</mat-icon>
+      <span>Minha Conta</span>
+    </button>
+    <mat-menu #userMenu="matMenu">
+      <a mat-menu-item routerLink="/profile">
+        <mat-icon>person</mat-icon>
+        <span>Perfil</span>
+      </a>
+      <button mat-menu-item (click)="logout()">
+        <mat-icon>exit_to_app</mat-icon>
+        <span>Sair</span>
+      </button>
+    </mat-menu>
+  </ng-container>
+
+  <!-- Menu para usuário não logado -->
+  <ng-container *ngIf="!isLoggedIn">
+    <div class="spacer"></div>
+    <a mat-button routerLink="/login">
+      <mat-icon>login</mat-icon>
+      <span>Login</span>
+    </a>
+  </ng-container>
+</mat-toolbar>

@@ -1,0 +1,51 @@
+<div class="container">
+  <div *ngIf="loading" class="loading-spinner">
+    <mat-spinner></mat-spinner>
+  </div>
+
+  <mat-card class="product-card" *ngIf="!loading && product">
+    <mat-card-header>
+      <mat-card-title>{{ product.name }}</mat-card-title>
+      <mat-card-subtitle *ngIf="product.code">Código: {{ product.code }}</mat-card-subtitle>
+    </mat-card-header>
+
+    <mat-card-content>
+      <div class="product-detail">
+        <p class="detail-label">Situação:</p>
+        <p class="detail-value active">Ativo</p>
+      </div>
+
+      <div class="product-detail">
+        <p class="detail-label">Preço:</p>
+        <p class="detail-value">{{ product.price | currency }}</p>
+      </div>
+
+      <mat-divider></mat-divider>
+
+      <div *ngIf="product.description" class="product-description">
+        <h3>Descrição</h3>
+        <p>{{ product.description }}</p>
+      </div>
+
+      <div *ngIf="product.category" class="product-category">
+        <h3>Categoria</h3>
+        <p>{{ product.category.name }}</p>
+      </div>
+    </mat-card-content>
+
+    <mat-card-actions align="end">
+      <a mat-button [routerLink]="['/products']">Voltar para a lista</a>
+      <a mat-button color="accent" [routerLink]="['/products', product.id, 'edit']">
+        <mat-icon>edit</mat-icon> Editar
+      </a>
+      <button mat-button color="warn" (click)="deleteProduct()">
+        <mat-icon>delete</mat-icon> Excluir
+      </button>
+    </mat-card-actions>
+  </mat-card>
+
+  <div class="not-found" *ngIf="!loading && !product">
+    <h2>Produto não encontrado</h2>
+    <a mat-raised-button color="primary" [routerLink]="['/products']">Voltar para Produtos</a>
+  </div>
+</div>

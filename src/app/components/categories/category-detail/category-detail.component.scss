@@ -1,0 +1,87 @@
+.container {
+  padding: 24px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.category-card {
+  max-width: 800px;
+  margin: 0 auto;
+  background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.loading-spinner {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 200px;
+  margin: 20px 0;
+}
+
+.category-description {
+  margin: 24px 0;
+
+  h3 {
+    color: #2c3e50;
+    margin-bottom: 8px;
+  }
+
+  p {
+    color: #495057;
+    line-height: 1.6;
+  }
+}
+
+.category-products {
+  margin-top: 24px;
+
+  .products-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+
+    h3 {
+      color: #2c3e50;
+      margin: 0;
+    }
+  }
+
+  .no-products {
+    color: #6c757d;
+    text-align: center;
+    padding: 32px;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+  }
+}
+
+mat-list-item {
+  margin: 8px 0;
+  
+  a {
+    color: #0369a1;
+    text-decoration: none;
+    
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+
+.not-found {
+  text-align: center;
+  padding: 48px;
+  
+  h2 {
+    color: #2c3e50;
+    margin-bottom: 24px;
+  }
+}
+
+mat-card-actions {
+  padding: 16px;
+  gap: 8px;
+}

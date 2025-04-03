@@ -1,0 +1,21 @@
+<div class="custom-textarea-container">
+  <label [for]="id" *ngIf="label">{{ label }}</label>
+  
+  <div class="textarea-wrapper">
+    <textarea
+      [id]="id"
+      [name]="name"
+      [placeholder]="placeholder"
+      [disabled]="disabled"
+      [value]="value"
+      [rows]="rows"
+      (input)="onInput($event)"
+      (blur)="onBlur()"
+      [class.error]="showError"
+    ></textarea>
+  </div>
+
+  <div class="error-message" *ngIf="showError && errorMessage">
+    {{ errorMessage }}
+  </div>
+</div>

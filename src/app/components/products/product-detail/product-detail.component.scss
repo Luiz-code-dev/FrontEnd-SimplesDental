@@ -1,0 +1,44 @@
+.container {
+  padding: 20px;
+}
+
+.product-card {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.loading-spinner {
+  display: flex;
+  justify-content: center;
+  margin: 20px 0;
+}
+
+.product-detail {
+  display: flex;
+  margin-bottom: 10px;
+}
+
+.detail-label {
+  font-weight: bold;
+  min-width: 100px;
+  margin-right: 10px;
+}
+
+.active {
+  color: green;
+  font-weight: bold;
+}
+
+.inactive {
+  color: red;
+  font-weight: bold;
+}
+
+.product-description, .product-category {
+  margin-top: 20px;
+}
+
+.not-found {
+  text-align: center;
+  margin-top: 50px;
+}

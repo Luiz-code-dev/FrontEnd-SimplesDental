@@ -1,0 +1,40 @@
+<div class="container">
+  <mat-card class="category-form-card">
+    <mat-card-header>
+      <mat-card-title>{{ isEditMode ? 'Editar Categoria' : 'Nova Categoria' }}</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <div *ngIf="loading" class="loading-spinner">
+        <mat-spinner></mat-spinner>
+      </div>
+
+      <form [formGroup]="categoryForm" (ngSubmit)="onSubmit()" *ngIf="!loading">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Nome</mat-label>
+          <input matInput formControlName="name" placeholder="Nome da categoria" required>
+          <mat-error *ngIf="categoryForm.get('name')?.hasError('required')">
+            Nome é obrigatório
+          </mat-error>
+          <mat-error *ngIf="categoryForm.get('name')?.hasError('maxlength')">
+            Nome deve ter no máximo 100 caracteres
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Descrição</mat-label>
+          <textarea matInput formControlName="description" placeholder="Descrição da categoria" rows="3"></textarea>
+          <mat-error *ngIf="categoryForm.get('description')?.hasError('maxlength')">
+            Descrição deve ter no máximo 255 caracteres
+          </mat-error>
+        </mat-form-field>
+
+        <div class="button-container">
+          <button type="button" mat-button [routerLink]="['/categories']">Cancelar</button>
+          <button type="submit" mat-raised-button color="primary" [disabled]="categoryForm.invalid">
+            {{ isEditMode ? 'Atualizar' : 'Criar' }}
+          </button>
+        </div>
+      </form>
+    </mat-card-content>
+  </mat-card>
+</div>

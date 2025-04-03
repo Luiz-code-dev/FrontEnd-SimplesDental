@@ -1,0 +1,22 @@
+.spacer {
+  flex: 1 1 auto;
+}
+
+mat-toolbar {
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+
+  a, button {
+    margin: 0 4px;
+    text-decoration: none;
+    color: inherit;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+
+    mat-icon {
+      margin-right: 4px;
+    }
+  }
+}
