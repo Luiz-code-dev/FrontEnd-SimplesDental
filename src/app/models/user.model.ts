@@ -6,22 +6,23 @@ export enum UserRole {
 export interface User {
   id: number;
   email: string;
-  firstName?: string;
-  lastName?: string;
+  firstName: string;
+  lastName: string;
+  name: string;
   role: UserRole;
-  token?: string;
+  active: boolean;
   createdAt?: Date;
   updatedAt?: Date;
-  name?: string;
 }
 
 export interface UserContext {
   id: number;
   email: string;
-  firstName?: string;
-  lastName?: string;
-  name?: string;
+  firstName: string;
+  lastName: string;
+  name: string;
   role: UserRole;
+  active: boolean;
   createdAt?: Date;
   updatedAt?: Date;
 }
@@ -37,6 +38,7 @@ export interface CreateUserDto {
   email: string;
   password: string;
   role: UserRole;
+  active: boolean;
 }
 
 export interface UpdateUserDto {
@@ -44,11 +46,12 @@ export interface UpdateUserDto {
   lastName?: string;
   email?: string;
   role?: UserRole;
+  active?: boolean;
 }
 
 export interface AuthResponse {
   token: string;
-  user?: UserContext;
+  user: UserContext;
 }
 
 export interface ChangePasswordDto {

@@ -1,47 +1,99 @@
 .user-list-container {
-  padding: 1rem;
-}
+  padding: 24px;
 
-.header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 1rem;
-}
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
 
-.table-container {
-  overflow-x: auto;
-}
+    h1 {
+      margin: 0;
+      color: #2c3e50;
+    }
+  }
 
-table {
-  width: 100%;
-}
+  .table-container {
+    background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
 
-.mat-column-actions {
-  width: 100px;
-  text-align: right;
-}
+    .mat-elevation-z2 {
+      border-radius: 8px;
+      overflow: hidden;
+    }
 
-.active {
-  color: #4caf50;
-  font-weight: 500;
-}
+    table {
+      width: 100%;
+      background: white;
 
-.inactive {
-  color: #f44336;
-  font-weight: 500;
-}
+      th {
+        font-weight: 600;
+        color: #2c3e50;
+      }
 
-.loading-spinner {
-  display: flex;
-  justify-content: center;
-  padding: 2rem;
-}
+      .mat-column-actions {
+        width: 100px;
+        text-align: right;
+      }
 
-mat-paginator {
-  margin-top: 1rem;
-}
+      .mat-mdc-header-cell {
+        font-weight: 600;
+        color: #2c3e50;
+      }
 
-.mat-column-role {
-  width: 120px;
+      .mat-mdc-cell {
+        color: #495057;
+      }
+    }
+
+    .mat-chip {
+      min-height: 24px;
+      padding: 4px 12px;
+      font-size: 12px;
+    }
+
+    .mat-mdc-chip {
+      border-radius: 16px;
+      font-size: 12px;
+      height: 24px;
+      min-height: 24px;
+    }
+
+    .admin-chip {
+      background-color: #e0f2fe !important;
+      color: #0369a1 !important;
+    }
+
+    .user-chip {
+      background-color: #f3e8ff !important;
+      color: #6b21a8 !important;
+    }
+
+    .active-chip {
+      background-color: #e1f5e9 !important;
+      color: #0f766e !important;
+    }
+
+    .inactive-chip {
+      background-color: #fee2e2 !important;
+      color: #b91c1c !important;
+    }
+  }
+
+  .loading-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 200px;
+  }
+
+  mat-paginator {
+    border-top: 1px solid rgba(0, 0, 0, 0.12);
+  }
+
+  .mat-mdc-paginator {
+    border-top: 1px solid rgba(0, 0, 0, 0.12);
+  }
 }
