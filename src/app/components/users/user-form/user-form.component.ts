@@ -47,9 +47,12 @@ export class UserFormComponent implements OnInit {
     private snackBar: MatSnackBar
   ) {
     this.userForm = this.fb.group({
+      firstName: ['', [Validators.required, Validators.maxLength(50)]],
+      lastName: ['', [Validators.required, Validators.maxLength(50)]],
       email: ['', [Validators.required, Validators.email, Validators.maxLength(100)]],
       password: ['', [Validators.required, Validators.minLength(6), Validators.maxLength(50)]],
-      role: [UserRole.USER, Validators.required]
+      role: [UserRole.USER, Validators.required],
+      active: [true, Validators.required]
     });
   }
 
@@ -68,12 +71,16 @@ export class UserFormComponent implements OnInit {
     this.userService.getUser(id).subscribe({
       next: (user) => {
         this.userForm.patchValue({
+          firstName: user.firstName,
+          lastName: user.lastName,
           email: user.email,
-          role: user.role
+          role: user.role,
+          active: user.active
         });
         this.loading = false;
       },
       error: (error) => {
+        console.error('Error loading user:', error);
         this.snackBar.open('Error loading user', 'Close', { duration: 3000 });
         this.router.navigate(['/users']);
       }
@@ -100,8 +107,8 @@ export class UserFormComponent implements OnInit {
           this.router.navigate(['/users']);
         },
         error: (error) => {
-          const message = error.error?.message || `Error ${userId ? 'updating' : 'creating'} user`;
-          this.snackBar.open(message, 'Close', { duration: 3000 });
+          console.error('Error saving user:', error);
+          this.snackBar.open('Error saving user', 'Close', { duration: 3000 });
           this.loading = false;
         }
       });
