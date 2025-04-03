@@ -8,9 +8,9 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { RouterModule } from '@angular/router';
+import { RouterModule, Router } from '@angular/router';
 import { UserService } from '../../../services/user.service';
-import { User, UserRole } from '../../../models/user.model';
+import { User, UserRole, UpdateUserDto } from '../../../models/user.model';
 import { PermissionDirective } from '../../../directives/permission.directive';
 import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 
@@ -48,7 +48,8 @@ export class UserListComponent implements OnInit {
 
   constructor(
     private userService: UserService,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -110,5 +111,9 @@ export class UserListComponent implements OnInit {
         }
       });
     }
+  }
+
+  editUser(id: number): void {
+    this.router.navigate(['/users/edit', id]);
   }
 }

@@ -1,18 +1,20 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { MatButtonModule } from '@angular/material/button';
-import { MatCardModule } from '@angular/material/card';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatButtonModule } from '@angular/material/button';
 import { MatSelectModule } from '@angular/material/select';
-import { MatSlideToggleModule } from '@angular/material/slide-toggle';
-
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { Router, ActivatedRoute } from '@angular/router';
 import { UserService } from '../../../services/user.service';
-import { UserRole } from '../../../models/user.model';
+import { User, UserRole, UpdateUserDto } from '../../../models/user.model';
+
+import { MatCardModule } from '@angular/material/card';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-user-form',
@@ -79,9 +81,9 @@ export class UserFormComponent implements OnInit {
         });
         this.loading = false;
       },
-      error: (error) => {
-        console.error('Error loading user:', error);
-        this.snackBar.open('Error loading user', 'Close', { duration: 3000 });
+      error: () => {
+        this.snackBar.open('Erro ao carregar usuário', 'Fechar', { duration: 3000 });
+        this.loading = false;
         this.router.navigate(['/users']);
       }
     });
@@ -90,28 +92,40 @@ export class UserFormComponent implements OnInit {
   onSubmit(): void {
     if (this.userForm.valid) {
       this.loading = true;
-      const userData = this.userForm.value;
-      const userId = this.route.snapshot.paramMap.get('id');
+      const userData: UpdateUserDto = {
+        firstName: this.userForm.get('firstName')?.value,
+        lastName: this.userForm.get('lastName')?.value,
+        email: this.userForm.get('email')?.value,
+        role: this.userForm.get('role')?.value
+      };
 
-      const operation = userId
-        ? this.userService.updateUser(+userId, userData)
-        : this.userService.createUser(userData);
-
-      operation.subscribe({
-        next: () => {
-          this.snackBar.open(
-            `User ${userId ? 'updated' : 'created'} successfully`,
-            'Close',
-            { duration: 3000 }
-          );
-          this.router.navigate(['/users']);
-        },
-        error: (error) => {
-          console.error('Error saving user:', error);
-          this.snackBar.open('Error saving user', 'Close', { duration: 3000 });
-          this.loading = false;
-        }
-      });
+      const id = Number(this.route.snapshot.paramMap.get('id'));
+      if (id) {
+        this.userService.updateUser(id, userData).subscribe({
+          next: () => {
+            this.snackBar.open('Usuário atualizado com sucesso!', 'Fechar', { duration: 3000 });
+            this.router.navigate(['/users']);
+          },
+          error: (error) => {
+            let message = 'Erro ao atualizar usuário';
+            if (error.status === 400) {
+              if (error.error?.message?.includes('email')) {
+                message = 'Este e-mail já está em uso';
+              } else if (error.error?.message?.includes('admin')) {
+                message = 'Não é possível alterar o último administrador para usuário comum';
+              }
+            } else if (error.status === 403) {
+              message = 'Você não tem permissão para atualizar usuários';
+            } else if (error.status === 404) {
+              message = 'Usuário não encontrado';
+            }
+            this.snackBar.open(message, 'Fechar', { duration: 3000 });
+          },
+          complete: () => {
+            this.loading = false;
+          }
+        });
+      }
     }
   }
 }

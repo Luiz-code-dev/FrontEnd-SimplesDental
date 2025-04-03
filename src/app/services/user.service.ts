@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Observable, map } from 'rxjs';
+import { Observable, map, catchError } from 'rxjs';
 import { User, CreateUserDto, UpdateUserDto } from '../models/user.model';
 import { Page, PageRequest } from '../models/page.model';
 import { environment } from '../../environments/environment';
