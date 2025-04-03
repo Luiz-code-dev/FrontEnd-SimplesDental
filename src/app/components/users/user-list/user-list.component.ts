@@ -97,8 +97,15 @@ export class UserListComponent implements OnInit {
           this.loadUsers();
         },
         error: (error) => {
-          console.error('Error deleting user:', error);
-          this.snackBar.open('Erro ao excluir usuário', 'Fechar', { duration: 3000 });
+          let message = 'Erro ao excluir usuário';
+          if (error.status === 400) {
+            message = 'Não é possível excluir o último usuário administrador';
+          } else if (error.status === 403) {
+            message = 'Você não tem permissão para excluir usuários';
+          } else if (error.status === 404) {
+            message = 'Usuário não encontrado';
+          }
+          this.snackBar.open(message, 'Fechar', { duration: 3000 });
           this.loading = false;
         }
       });
