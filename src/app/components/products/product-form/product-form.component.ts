@@ -8,7 +8,8 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
@@ -29,7 +30,9 @@ import { Page, PageRequest } from '../../../models/page.model';
     MatFormFieldModule,
     MatInputModule,
     MatSelectModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    MatSnackBarModule,
+    MatCheckboxModule
   ],
   templateUrl: './product-form.component.html',
   styleUrls: ['./product-form.component.scss']
@@ -53,7 +56,9 @@ export class ProductFormComponent implements OnInit {
       name: ['', [Validators.required, Validators.maxLength(100)]],
       description: ['', [Validators.required, Validators.maxLength(255)]],
       price: [0, [Validators.required, Validators.min(0)]],
-      categoryId: [null, [Validators.required]]
+      code: ['', [Validators.required]],
+      categoryId: [null, [Validators.required]],
+      status: [true]
     });
 
     // Buscar todas as categorias usando paginação
@@ -85,7 +90,9 @@ export class ProductFormComponent implements OnInit {
           name: product.name,
           description: product.description,
           price: product.price,
-          categoryId: product.category.id
+          code: product.code,
+          categoryId: product.category.id,
+          status: product.status
         });
         this.loading = false;
       },
@@ -100,42 +107,42 @@ export class ProductFormComponent implements OnInit {
   onSubmit(): void {
     if (this.productForm.valid) {
       this.loading = true;
-      const formData = this.productForm.value;
-
-      const productDto: CreateProductDto = {
-        name: formData.name,
-        description: formData.description,
-        price: formData.price,
+      const formValue = this.productForm.value;
+      
+      const productData = {
+        name: formValue.name,
+        description: formValue.description,
+        price: formValue.price,
+        code: formValue.code,
+        status: formValue.status,
         category: {
-          id: formData.categoryId
+          id: formValue.categoryId
         }
       };
 
-      if (this.isEditMode && this.productId) {
-        this.productService.updateProduct(this.productId, productDto).subscribe({
-          next: () => {
-            this.snackBar.open('Produto atualizado com sucesso!', 'Fechar', { duration: 3000 });
-            this.router.navigate(['/products']);
-          },
-          error: (error) => {
-            console.error('Erro ao atualizar produto:', error);
-            this.snackBar.open('Erro ao atualizar produto', 'Fechar', { duration: 3000 });
-            this.loading = false;
-          }
-        });
-      } else {
-        this.productService.createProduct(productDto).subscribe({
-          next: () => {
-            this.snackBar.open('Produto criado com sucesso!', 'Fechar', { duration: 3000 });
-            this.router.navigate(['/products']);
-          },
-          error: (error) => {
-            console.error('Erro ao criar produto:', error);
-            this.snackBar.open('Erro ao criar produto', 'Fechar', { duration: 3000 });
-            this.loading = false;
-          }
-        });
-      }
+      const request = this.isEditMode ?
+        this.productService.updateProduct(this.productId!, productData) :
+        this.productService.createProduct(productData);
+
+      request.subscribe({
+        next: () => {
+          this.snackBar.open(
+            this.isEditMode ? 'Produto atualizado com sucesso!' : 'Produto criado com sucesso!',
+            'Fechar',
+            { duration: 3000 }
+          );
+          this.router.navigate(['/products']);
+        },
+        error: (error) => {
+          console.error('Erro ao criar produto:', error);
+          this.snackBar.open(
+            'Erro ao ' + (this.isEditMode ? 'atualizar' : 'criar') + ' produto',
+            'Fechar',
+            { duration: 3000 }
+          );
+          this.loading = false;
+        }
+      });
     }
   }
 
@@ -143,31 +150,18 @@ export class ProductFormComponent implements OnInit {
     this.router.navigate(['/products']);
   }
 
-  private handleSuccess(action: string): void {
-    this.snackBar.open(`Produto ${action} com sucesso`, 'Fechar', { duration: 3000 });
-    this.router.navigate(['/products']);
-  }
-
-  private handleError(error: any): void {
-    const message = error.error?.message || `Erro ao salvar produto`;
-    this.snackBar.open(message, 'Fechar', { duration: 3000 });
-    this.loading = false;
-  }
-
   getErrorMessage(field: string): string {
     const control = this.productForm.get(field);
-    if (!control) return '';
-
-    if (control.hasError('required')) {
+    if (control?.hasError('required')) {
       return 'Campo obrigatório';
     }
-    if (control.hasError('maxlength')) {
+    if (control?.hasError('maxlength')) {
       const maxLength = control.errors?.['maxlength'].requiredLength;
       return `Máximo de ${maxLength} caracteres`;
     }
-    if (control.hasError('min')) {
-      return 'O valor deve ser maior que 0';
+    if (control?.hasError('min')) {
+      return 'Valor deve ser maior que 0';
     }
-    return '';
+    return 'Campo inválido';
   }
 }

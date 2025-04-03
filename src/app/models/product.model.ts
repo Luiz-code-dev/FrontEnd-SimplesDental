@@ -5,13 +5,19 @@ export interface Product {
   name: string;
   description: string;
   price: number;
+  code: string;
+  status: boolean;
   category: Category;
+  createdAt?: Date;
+  updatedAt?: Date;
 }
 
 export interface CreateProductDto {
   name: string;       // max 100 chars
   description: string; // max 255 chars
   price: number;      // > 0
+  code: string;
+  status: boolean;
   category: {
     id: number;
   };
